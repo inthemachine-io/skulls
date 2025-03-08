@@ -71,7 +71,12 @@ async function fetchData(id) {
         document.getElementById("skull-artist-style").innerText = Skull_Artist_Style;
         document.getElementById("skull-art-movement").innerText = Skull_Art_Movement + " (" + Skull_Art_Movement_Period + ")";
         document.getElementById("skull-artist-bio").innerText = Skull_Artist_Biography;
-        document.getElementById("skull-artist-link").href = Skull_Artist_Wikipedia;
+        
+        // Überprüfen, ob das Element ein Link ist, bevor das href-Attribut gesetzt wird
+        const artistLinkElement = document.getElementById("skull-artist-link");
+        if (artistLinkElement.tagName === "A") {
+            artistLinkElement.href = Skull_Artist_Wikipedia;
+        }
 
     } catch (error) {
         console.error("❌ Fehler beim Laden der Daten:", error);
