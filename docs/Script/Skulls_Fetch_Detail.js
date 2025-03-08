@@ -53,7 +53,7 @@ async function fetchData(id) {
         const Skull_Prompt_Style = row[Index_Skull_Prompt_Style].v? row[Index_Skull_Prompt_Style].v : "N/A";
         const Skull_Prompt = row[Index_Skull_Prompt].v? row[Index_Skull_Prompt].v : "N/A";
         const Skull_Color_Style = row[Index_Skull_Color_Style].v? row[Index_Skull_Color_Style].v : "N/A";
-        const Skull_Generation_DateTime = row[Index_Skull_Generation_DateTime].v? row[Index_Skull_Generation_DateTime].v : "N/A";
+        const Skull_Generation_DateTime = row[Index_Skull_Generation_DateTime].f? row[Index_Skull_Generation_DateTime].f : "N/A"; // Verwende das formatierte Datum
         const Skull_EngineUsed = row[Index_Skull_EngineUsed].v? row[Index_Skull_EngineUsed].v : "N/A";
         const Skull_ID = row[Index_Skull_ID].v? row[Index_Skull_ID].v : "N/A";
         const Skull_Image = row[Index_Skull_Image].v? row[Index_Skull_Image].v : "N/A";
@@ -67,9 +67,9 @@ async function fetchData(id) {
         document.getElementById("skull-color-style").innerText = Skull_Color_Style;
         document.getElementById("skull-prompt-style").innerText = Skull_Prompt_Style;
         document.getElementById("skull-engine").innerText = Skull_EngineUsed;
-        document.getElementById("skull-artist").innerText = Skull_Artist_Shortname + "(" + Skull_Artist_Alive + ")";
+        document.getElementById("skull-artist").innerText = Skull_Artist_Shortname + " (" + Skull_Artist_Alive + ")";
         document.getElementById("skull-artist-style").innerText = Skull_Artist_Style;
-        document.getElementById("skull-art-movement").innerText = Skull_Art_Movement + "(" + Skull_Art_Movement_Period + ")";
+        document.getElementById("skull-art-movement").innerText = Skull_Art_Movement + " (" + Skull_Art_Movement_Period + ")";
         document.getElementById("skull-artist-bio").innerText = Skull_Artist_Biography;
         document.getElementById("skull-artist-link").href = Skull_Artist_Wikipedia;
 
