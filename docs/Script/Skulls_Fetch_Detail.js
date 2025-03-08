@@ -59,7 +59,7 @@ async function fetchData(id) {
         const Skull_Image = row[Index_Skull_Image].v? row[Index_Skull_Image].v : "N/A";
 
         // Ausgabe in Carrd setzen
-        document.getElementById("skull-id").innerText = Skull_ID;
+        document.getElementById("skull-id").innerText = "SITM • " + Skull_ID;
         document.querySelector("#skull-image img").src = Skull_Image;
         document.getElementById("skull-prompt").innerText = Skull_Prompt;
         document.getElementById("skull-number").innerText = Skull_Number + " / " + Skull_Total;
