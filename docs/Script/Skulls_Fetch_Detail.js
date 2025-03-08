@@ -69,7 +69,7 @@ async function fetchData(id) {
         document.getElementById("skull-engine").innerText = Skull_EngineUsed;
         document.getElementById("skull-artist").innerText = Skull_Artist_Name; 
         document.getElementById("skull-artist-alive").innerText = Skull_Artist_Alive;
-        document.getElementById("skull-art-movement").innerText = "Part of " + Skull_Art_Movement + "\n(" + Skull_Art_Movement_Period + ")";
+        document.getElementById("skull-art-movement").innerText = Skull_Art_Movement + " (" + Skull_Art_Movement_Period + ")";
         document.getElementById("skull-artist-bio").innerText = Skull_Artist_Biography;
         document.querySelector("#skull-artist-link a").href = Skull_Artist_Wikipedia;
         document.querySelector("#skull-artist-link a").target = "_blank";
