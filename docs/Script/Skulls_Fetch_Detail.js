@@ -67,7 +67,7 @@ async function fetchData(id) {
         document.getElementById("skull-color-style").innerText = Skull_Color_Style;
         document.getElementById("skull-prompt-style").innerText = Skull_Prompt_Style;
         document.getElementById("skull-engine").innerText = Skull_EngineUsed;
-        document.getElementById("skull-artist").innerText = Skull_Artist_Name + "\n(" + Skull_Artist_Alive + ")";
+        document.getElementById("skull-artist").innerText = Skull_Artist_Name + " (" + Skull_Artist_Alive + ")";
         document.getElementById("skull-artist-style").innerText = Skull_Artist_Style;
         document.getElementById("skull-art-movement").innerText = Skull_Art_Movement + " (" + Skull_Art_Movement_Period + ")";
         document.getElementById("skull-artist-bio").innerText = Skull_Artist_Biography;
