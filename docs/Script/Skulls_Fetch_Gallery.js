@@ -1,13 +1,10 @@
-async function fetchData() {
+async function fetchData(cstyle, pstyle) {
+    pstyle = pstyle.replace(/_/g, ' '); // Ersetze Unterstriche durch Leerzeichen
     
-
     const sheetID = "1T4GWfvQLQOKGPZnIL-CpqHDDYs5u8UwI8ll-wc7Ep0w"; // Deine Google Sheet ID
     const range = "A:Z"; // Bereich mit allen Spalten
-    const statement = "SELECT * WHERE K='AI Generated' AND M='Color'"
+    const statement = `SELECT * WHERE K='${pstyle}' AND M='${cstyle}'`;
     const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&tq=${statement}&range=${range}`;
-
-
-
 
     try {
         const response = await fetch(url);
@@ -41,12 +38,14 @@ async function fetchData() {
             console.log("Erste Zeile:", json.table.rows[0].c);
         }
 
-        // Daten extrahieren (max. 100 Einträge)
-        const skulls = json.table.rows.slice(0, 100).map(row => ({
-            image: row[Index_Skull_Image]?.v ? String(row[Index_Skull_Image].v) : "https://inthemachine-io.github.io/skulls/146-991693-AS.png",
-            detailURL: row[Index_Skull_Detail_URL]?.v ? String(row[Index_Skull_Detail_URL].v) : "#",
-            artist: row[Index_Skull_Artist_Name]?.v ? String(row[Index_Skull_Artist_Name].v) : "Unknown Artist",
-        }));
+        const skulls = json.table.rows.map(row => {
+            const cells = row.c;
+            return {
+                image: cells[Index_Skull_Image]?.v ? String(cells[Index_Skull_Image].v) : "https://inthemachine-io.github.io/skulls/146-991693-AS.png",
+                detailURL: cells[Index_Skull_Detail_URL]?.v ? String(cells[Index_Skull_Detail_URL].v) : "#",
+                artist: cells[Index_Skull_Artist_Name]?.v ? String(cells[Index_Skull_Artist_Name].v) : "Unknown Artist",
+            };
+        });
 
         if (skulls.length === 0) {
             console.log("⚠️ Keine passenden Daten verfügbar.");
@@ -55,7 +54,7 @@ async function fetchData() {
 
         // Verteile die Bilder auf 10 Galleries mit je 10 Einträgen
         for (let i = 0; i < 10; i++) {
-            const gallery = document.getElementById(`gallery0${i + 1}`);
+            const gallery = document.getElementById(`gallery${i + 1}`);
             if (!gallery) continue;
 
             const thumbnails = gallery.querySelectorAll("a.thumbnail");
@@ -89,6 +88,16 @@ async function fetchData() {
     }
 }
 
+function getQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    const cstyle = params.get('cstyle');
+    const pstyle = params.get('pstyle');
+    return { cstyle, pstyle };
+}
+
 // Stelle sicher, dass fetchData erst nach dem vollständigen Laden des DOMs ausgeführt wird
-document.addEventListener("DOMContentLoaded", fetchData);
+document.addEventListener("DOMContentLoaded", () => {
+    const { cstyle, pstyle } = getQueryParams();
+    fetchData(cstyle, pstyle);
+});
 console.log("🚀 Galerie-Script gestartet!");
