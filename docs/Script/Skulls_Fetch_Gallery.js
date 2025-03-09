@@ -19,11 +19,13 @@ async function fetchData() {
         // Relevante Spalten-Indexe
         const Index_Skull_Image = headers.indexOf("Skull_Image");
         const Index_Skull_Detail_URL = headers.indexOf("Skull_Detail_URL");
+        const Index_Skull_Artist_Name = headers.indexOf("Skull_Artist_Name");
 
         // Daten extrahieren (max. 100 Einträge)
         const skulls = json.table.rows.slice(0, 100).map(row => ({
-            image: String(row[Index_Skull_Image]?.v || ""),
-            detailURL: String(row[Index_Skull_Detail_URL]?.v || "#")
+            image: row[Index_Skull_Image]?.v ? String(row[Index_Skull_Image].v) : "https://inthemachine-io.github.io/skulls/146-991693-AS.png",
+            detailURL: row[Index_Skull_Detail_URL]?.v ? String(row[Index_Skull_Detail_URL].v) : "#",
+            artist: row[Index_Skull_Artist]?.v ? String(row[Index_Skull_Artist].v) : "Unknown Artist",
         }));
 
         if (skulls.length === 0) {
@@ -51,6 +53,12 @@ async function fetchData() {
                         };
                     }
                     thumbnails[j].href = skulls[index].detailURL;
+
+                    // Falls du den Künstlernamen auch in die Caption setzen willst:
+                    const caption = thumbnails[j].parentElement.querySelector(".caption p");
+                    if (caption) {
+                        caption.textContent = skulls[index].artist;
+                    }
                 }
             }
         }
@@ -61,5 +69,5 @@ async function fetchData() {
     }
 }
 
-// Starte den Fetch-Prozess beim Laden der Seite
-fetchData();
+// Stelle sicher, dass fetchData erst nach dem vollständigen Laden des DOMs ausgeführt wird
+document.addEventListener("DOMContentLoaded", fetchData);
