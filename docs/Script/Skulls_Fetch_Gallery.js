@@ -6,6 +6,8 @@ async function fetchData() {
     const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&tq=SELECT * WHERE K='AI Generated' AND M='Color'`;
 
 
+
+
     try {
         const response = await fetch(url);
         const text = await response.text();
