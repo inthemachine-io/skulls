@@ -78,3 +78,4 @@ async function fetchData() {
 
 // Stelle sicher, dass fetchData erst nach dem vollständigen Laden des DOMs ausgeführt wird
 document.addEventListener("DOMContentLoaded", fetchData);
+console.log("🚀 Galerie-Script gestartet!");
