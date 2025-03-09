@@ -25,7 +25,7 @@ async function fetchData() {
         const skulls = json.table.rows.slice(0, 100).map(row => ({
             image: row[Index_Skull_Image]?.v ? String(row[Index_Skull_Image].v) : "https://inthemachine-io.github.io/skulls/146-991693-AS.png",
             detailURL: row[Index_Skull_Detail_URL]?.v ? String(row[Index_Skull_Detail_URL].v) : "#",
-            artist: row[Index_Skull_Artist_Name]?.v ? String(row[Index_Skull_Artist].v) : "Unknown Artist",
+            artist: row[Index_Skull_Artist_Name]?.v ? String(row[Index_Skull_Artist_Name].v) : "Unknown Artist",
         }));
 
         if (skulls.length === 0) {
