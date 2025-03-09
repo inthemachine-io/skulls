@@ -3,7 +3,8 @@ async function fetchData() {
 
     const sheetID = "1T4GWfvQLQOKGPZnIL-CpqHDDYs5u8UwI8ll-wc7Ep0w"; // Deine Google Sheet ID
     const range = "A:Z"; // Bereich mit allen Spalten
-    const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&tq=SELECT * WHERE K='AI Generated' AND M='Color'`;
+    const statement = "SELECT * WHERE K='AI Generated' AND M='Color'"
+    const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&tq=${statement}&range=${range}`;
 
 
 
