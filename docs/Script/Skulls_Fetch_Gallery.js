@@ -1,6 +1,6 @@
 async function fetchData() {
     const sheetID = "1T4GWfvQLQOKGPZnIL-CpqHDDYs5u8UwI8ll-wc7Ep0w"; // Deine Google Sheet ID
-    const query = encodeURIComponent("SELECT * WHERE P='AI Generated' AND Q='Monochrome'");
+    const query = encodeURIComponent("SELECT * WHERE K='AI Generated' AND Q='Color'");
     const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&tq=${query}`;
 
     try {
