@@ -6,9 +6,6 @@ async function fetchData() {
     const statement = "SELECT * WHERE K='AI Generated' AND M='Color'"
     const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&tq=${statement}&range=${range}`;
 
-
-
-
     try {
         const response = await fetch(url);
         const text = await response.text();
@@ -27,9 +24,7 @@ async function fetchData() {
         const Index_Skull_Detail_URL = headers.indexOf("Skull_Detail_URL");
         const Index_Skull_Artist_Name = headers.indexOf("Skull_Artist_Name");
 
-        console.log(Index_Skull_Artist_Name);
-        console.log(Index_Skull_Detail_URL);
-        console.log(Index_Skull_Image);
+
 
         // Daten extrahieren (max. 100 Einträge)
         const skulls = json.table.rows.slice(0, 100).map(row => ({
