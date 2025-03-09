@@ -72,10 +72,10 @@ async function fetchData(cstyle, pstyle) {
     
     document.getElementById("prompt-color-style").innerHTML= pstyle + " - " + cstyle;
 
-    if(cstyle == "AI Generated"){
+    if(pstyle == "AI Generated"){
         document.getElementById("buttons14 buttons n01").style.opacity = "0.5";
     }
-    if(cstyle == "Generic"){
+    if(pstyle == "Generic"){
         document.getElementById("buttons14 buttons n02").style.opacity = "0.5";
     }
     if(cstyle == "Monochrome"){
