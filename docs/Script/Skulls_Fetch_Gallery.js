@@ -47,6 +47,10 @@ async function fetchData() {
                 if (thumbnails[j]) {
                     const img = thumbnails[j].querySelector("span.frame img");
                     if (img) {
+                        console.log(skulls[index].image);
+                        console.log(skulls[index].detailURL);
+                        console.log(skulls[index].artist);
+                        
                         img.src = skulls[index].image;
                         img.onerror = () => {
                             img.src = "https://inthemachine-io.github.io/skulls/146-991693-AS.png"; // Fallback-Bild
