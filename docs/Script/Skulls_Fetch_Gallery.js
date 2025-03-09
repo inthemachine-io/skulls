@@ -69,6 +69,7 @@ async function fetchData(cstyle, pstyle) {
     }
     }
     
+    document.getElementById("prompt-color-style").innerHTML= pstyle + " - " + cstyle;
     console.log("✅ Daten erfolgreich geladen und in die Galerien eingefügt!");
     } catch (error) {
     console.error("❌ Fehler beim Laden der Daten:", error);
