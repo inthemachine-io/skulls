@@ -69,7 +69,22 @@ async function fetchData(cstyle, pstyle) {
     }
     }
     
+    
     document.getElementById("prompt-color-style").innerHTML= pstyle + " - " + cstyle;
+
+    if(cstyle == "AI Generated"){
+        document.getElementById("buttons14 buttons n01").style.opacity = "0.5";
+    }
+    if(cstyle == "Generic"){
+        document.getElementById("buttons14 buttons n02").style.opacity = "0.5";
+    }
+    if(cstyle == "Monochrome"){
+        document.getElementById("buttons14 buttons n03").style.opacity = "0.5";
+    }
+    if(cstyle == "Color"){
+        document.getElementById("buttons14 buttons n04").style.opacity = "0.5";
+    }
+
     console.log("✅ Daten erfolgreich geladen und in die Galerien eingefügt!");
     } catch (error) {
     console.error("❌ Fehler beim Laden der Daten:", error);
