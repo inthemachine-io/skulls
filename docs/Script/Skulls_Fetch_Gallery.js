@@ -46,6 +46,9 @@ async function fetchData() {
                     const img = thumbnails[j].querySelector("span.frame img");
                     if (img) {
                         img.src = skulls[index].image;
+                        img.onerror = () => {
+                            img.src = "https://en.wikipedia.org/wiki/Leonardo_da_Vinci#/media/File:Francesco_Melzi_-_Portrait_of_Leonardo.png"; // Fallback-Bild
+                        };
                     }
                     thumbnails[j].href = skulls[index].detailURL;
                 }
