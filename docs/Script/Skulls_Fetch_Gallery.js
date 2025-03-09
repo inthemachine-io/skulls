@@ -22,8 +22,8 @@ async function fetchData() {
 
         // Daten extrahieren (max. 100 Einträge)
         const skulls = json.table.rows.slice(0, 100).map(row => ({
-            image: row[Index_Skull_Image]?.v || "",
-            detailURL: row[Index_Skull_Detail_URL]?.v || "#"
+            image: String(row[Index_Skull_Image]?.v || ""),
+            detailURL: String(row[Index_Skull_Detail_URL]?.v || "#")
         }));
 
         if (skulls.length === 0) {
