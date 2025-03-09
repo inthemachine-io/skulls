@@ -72,17 +72,33 @@ async function fetchData(cstyle, pstyle) {
     
     document.getElementById("prompt-color-style").innerHTML= pstyle + " - " + cstyle;
 
-    if(pstyle == "AI Generated"){
-        document.getElementById("buttons14 buttons n01").style.opacity = "0.5";
+
+    if (pstyle == "AI Generated") {
+        let button = document.querySelector("#buttons14 .n01");
+        button.style.opacity = "0.5";
+        button.style.pointerEvents = "none";
+        button.style.cursor = "default"; // Verhindert den Hand-Cursor
     }
-    if(pstyle == "Generic"){
-        document.getElementById("buttons14 buttons n02").style.opacity = "0.5";
+
+    if (pstyle == "Generic") {
+        let button = document.querySelector("#buttons14 .n02");
+        button.style.opacity = "0.5";
+        button.style.pointerEvents = "none";
+        button.style.cursor = "default"; // Verhindert den Hand-Cursor
     }
-    if(cstyle == "Monochrome"){
-        document.getElementById("buttons14 buttons n03").style.opacity = "0.5";
+
+    if (cstyle == "Monochrome") {
+        let button = document.querySelector("#buttons14 .n03");
+        button.style.opacity = "0.5";
+        button.style.pointerEvents = "none";
+        button.style.cursor = "default"; // Verhindert den Hand-Cursor
     }
-    if(cstyle == "Color"){
-        document.getElementById("buttons14 buttons n04").style.opacity = "0.5";
+
+    if (cstyle == "Color") {
+        let button = document.querySelector("#buttons14 .n04");
+        button.style.opacity = "0.5";
+        button.style.pointerEvents = "none";
+        button.style.cursor = "default"; // Verhindert den Hand-Cursor
     }
 
     console.log("✅ Daten erfolgreich geladen und in die Galerien eingefügt!");
