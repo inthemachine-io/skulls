@@ -27,6 +27,10 @@ async function fetchData() {
         const Index_Skull_Detail_URL = headers.indexOf("Skull_Detail_URL");
         const Index_Skull_Artist_Name = headers.indexOf("Skull_Artist_Name");
 
+        console.log(Index_Skull_Artist_Name);
+        console.log(Index_Skull_Detail_URL);
+        console.log(Index_Skull_Image);
+
         // Daten extrahieren (max. 100 Einträge)
         const skulls = json.table.rows.slice(0, 100).map(row => ({
             image: row[Index_Skull_Image]?.v ? String(row[Index_Skull_Image].v) : "https://inthemachine-io.github.io/skulls/146-991693-AS.png",
@@ -53,10 +57,6 @@ async function fetchData() {
                 if (thumbnails[j]) {
                     const img = thumbnails[j].querySelector("span.frame img");
                     if (img) {
-                        console.log(skulls[index].image);
-                        console.log(skulls[index].detailURL);
-                        console.log(skulls[index].artist);
-
                         img.src = skulls[index].image;
                         img.onerror = () => {
                             img.src = "https://inthemachine-io.github.io/skulls/146-991693-AS.png"; // Fallback-Bild
