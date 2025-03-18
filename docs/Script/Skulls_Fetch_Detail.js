@@ -35,6 +35,10 @@ async function fetchData(id) {
         const Index_Skull_EngineUsed = headers.indexOf("Skull_EngineUsed");
         const Index_Skull_ID = headers.indexOf("Skull_ID");
         const Index_Skull_Image = headers.indexOf("Skull_Image");
+        const Index_Skull_ID_Generic_Monochrome = headers.indexOf("Skull_ID_Generic_Monochrome");
+        const Index_Skull_ID_Generic_Color = headers.indexOf("Skull_ID_Generic_Color");
+        const Index_Skull_ID_Ai_Generated_Monochrome = headers.indexOf("Skull_ID_Ai_Generated_Monochrome");
+        const Index_Skull_ID_Ai_Generated_Color = headers.indexOf("Skull_ID_Ai_Generated_Color");
 
         // Die erste Datenzeile holen
         const row = json.table.rows[0].c;
@@ -57,6 +61,10 @@ async function fetchData(id) {
         const Skull_EngineUsed = row[Index_Skull_EngineUsed].v? row[Index_Skull_EngineUsed].v : "N/A";
         const Skull_ID = row[Index_Skull_ID].v? row[Index_Skull_ID].v : "N/A";
         const Skull_Image = row[Index_Skull_Image].v? row[Index_Skull_Image].v : "N/A";
+        const Skull_ID_Generic_Monochrome = row[Index_Skull_ID_Generic_Monochrome].v ? row[Index_Skull_ID_Generic_Monochrome].v : "N/A";
+        const Skull_ID_Generic_Color = row[Index_Skull_ID_Generic_Color].v ? row[Index_Skull_ID_Generic_Color].v : "N/A";
+        const Skull_ID_Ai_Generated_Monochrome = row[Index_Skull_ID_Ai_Generated_Monochrome].v ? row[Index_Skull_ID_Ai_Generated_Monochrome].v : "N/A";
+        const Skull_ID_Ai_Generated_Color = row[Index_Skull_ID_Ai_Generated_Color].v ? row[Index_Skull_ID_Ai_Generated_Color].v : "N/A";
 
         // Ausgabe in Carrd setzen
         document.getElementById("skull-id").innerText = "SITM • " + Skull_ID;
@@ -73,6 +81,10 @@ async function fetchData(id) {
         document.getElementById("skull-artist-bio").innerText = Skull_Artist_Biography;
         document.querySelector("#skull-artist-link a").href = Skull_Artist_Wikipedia;
         document.querySelector("#skull-artist-link a").target = "_blank";
+        document.getElementById("styleselector").querySelector(".button.n01").href = `https://detail.skulls.inthemachine.io?id=${Skull_ID_Ai_Generated_Monochrome}`;
+        document.getElementById("styleselector").querySelector(".button.n02").href = `https://detail.skulls.inthemachine.io?id=${Skull_ID_Ai_Generated_Color}`;
+        document.getElementById("styleselector").querySelector(".button.n03").href = `https://detail.skulls.inthemachine.io?id=${Skull_ID_Generic_Monochrome}`;
+        document.getElementById("styleselector").querySelector(".button.n04").href = `https://detail.skulls.inthemachine.io?id=${Skull_ID_Generic_Color}`;
 
     } catch (error) {
         console.error("❌ Fehler beim Laden der Daten:", error);
