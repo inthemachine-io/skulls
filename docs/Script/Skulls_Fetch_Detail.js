@@ -1,105 +1,166 @@
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+const supabaseUrl = "https://rysvmrwyqxfoefnpcuwu.supabase.co";
+const supabaseKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ5c3Ztcnd5cXhmb2VmbnBjdXd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMzNDUyNzUsImV4cCI6MjA1ODkyMTI3NX0.2_Ub9d2PlSqFVmOdO4jxxkK4nysyYNy-eDkB-tVYJI4";
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// 🔁 Safe fallback helper
+const safe = (val, fallback = "N/A") => (val ? val : fallback);
+
 async function fetchData(id) {
-    const sheetID = "1T4GWfvQLQOKGPZnIL-CpqHDDYs5u8UwI8ll-wc7Ep0w"; // Deine Google Sheet ID
-    const range = "A:Z"; // Bereich mit allen Spalten
-    const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:json&tq=SELECT * WHERE P='${id}'`;
+  console.log("🧠 Lade Daten für ID:", id);
 
-    try {
-        const response = await fetch(url);
-        const text = await response.text();
-        const json = JSON.parse(text.substring(47).slice(0, -2)); // Google Sheets API Fix
+  const { data, error } = await supabase
+    .from("item")
+    .select(
+      `
+*,
+artist:artist_id (
+name,
+shortname,
+lifetime,
+biography,
+wikipedia_url,
+style_desc,
+movement:movement_id (
+name,
+period
+)
+),
+series:series_id (
+id,
+total_number,
+engine:engine_id (
+description
+)
+),
+prompt:prompt_id (
+description
+),
+color:color_id (
+description
+)
+`
+    )
+    .eq("official_id", id)
+    .single();
 
-        if (!json.table || !json.table.rows.length) {
-            console.log("❌ Kein Eintrag gefunden!");
-            return;
-        }
-        
-        // Header-Zeile holen (enthält Spaltennamen)
-        const headers = json.table.cols.map(col => col.label); // Holt Spaltennamen aus der API
+  if (error) {
+    console.error("❌ Fehler beim Laden der Supabase-Daten:", error);
+    return;
+  }
 
-        // Finde die Spaltenindexe für "Artist_Shortname" und andere
-        
-        const Index_Skull_Number = headers.indexOf("Skull_Number");
-        const Index_Skull_Total = headers.indexOf("Skull_Total");
-        const Index_Skull_Artist_Name = headers.indexOf("Skull_Artist_Name");
-        const Index_Skull_Artist_Shortname = headers.indexOf("Skull_Artist_Shortname");
-        const Index_Skull_Artist_Alive = headers.indexOf("Skull_Artist_Alive");
-        const Index_Skull_Artist_Biography = headers.indexOf("Skull_Artist_Biography");
-        const Index_Skull_Artist_Wikipedia = headers.indexOf("Skull_Artist_Wikipedia");
-        const Index_Skull_Artist_Style = headers.indexOf("Skull_Artist_Style");
-        const Index_Skull_Art_Movement = headers.indexOf("Skull_Art_Movement");
-        const Index_Skull_Art_Movement_Period = headers.indexOf("Skull_Art_Movement_Period");
-        const Index_Skull_Prompt_Style = headers.indexOf("Skull_Prompt_Style");
-        const Index_Skull_Prompt = headers.indexOf("Skull_Prompt");
-        const Index_Skull_Color_Style = headers.indexOf("Skull_Color_Style");
-        const Index_Skull_Generation_DateTime = headers.indexOf("Skull_Generation_DateTime");
-        const Index_Skull_EngineUsed = headers.indexOf("Skull_EngineUsed");
-        const Index_Skull_ID = headers.indexOf("Skull_ID");
-        const Index_Skull_Image = headers.indexOf("Skull_Image");
-        const Index_Skull_ID_Generic_Monochrome = headers.indexOf("Skull_ID_Generic_Monochrome");
-        const Index_Skull_ID_Generic_Color = headers.indexOf("Skull_ID_Generic_Color");
-        const Index_Skull_ID_Ai_Generated_Monochrome = headers.indexOf("Skull_ID_Ai_Generated_Monochrome");
-        const Index_Skull_ID_Ai_Generated_Color = headers.indexOf("Skull_ID_Ai_Generated_Color");
+  // 🧠 Ausgabe in Carrd setzen
+  document.getElementById("skull-id").innerText =
+    "SITM • " + safe(data.official_id);
+  document.querySelector("#skull-image img").src = safe(data.item_img_url);
+  document.getElementById("skull-prompt").innerText = safe(data.prompt_used);
+  document.getElementById("skull-number").innerText =
+    safe(data.number) + " / " + safe(data.series?.total_number);
+  document.getElementById("skull-creation-date").innerText = new Date(
+    data.creation_timestamp
+  ).toLocaleDateString();
+  document.getElementById("skull-color-style").innerText = safe(
+    data.color?.description
+  );
+  document.getElementById("skull-prompt-style").innerText = safe(
+    data.prompt?.description
+  );
+  document.getElementById("skull-engine").innerText = safe(
+    data.series?.engine?.description
+  );
+  document.getElementById("skull-artist").innerText = safe(data.artist?.name);
+  document.getElementById("skull-artist-alive").innerText = safe(
+    data.artist?.lifetime
+  );
+  document.getElementById("skull-art-movement").innerText =
+    safe(data.artist?.movement?.name) +
+    " (" +
+    safe(data.artist?.movement?.period) +
+    ")";
+  document.getElementById("skull-artist-bio").innerText = safe(
+    data.artist?.biography
+  );
+  document.querySelector("#skull-artist-link a").href = safe(
+    data.artist?.wikipedia_url
+  );
+  document.querySelector("#skull-artist-link a").target = "_blank";
 
-        // Die erste Datenzeile holen
-        const row = json.table.rows[0].c;
+  // 🔁 Zweite Abfrage: Styles desselben Künstlers & derselben Serie
+  fetchOtherStyles(data);
+}
 
-        // Zugriff über Spaltennamen
-        const Skull_Number = row[Index_Skull_Number].v? row[Index_Skull_Number].v : "N/A";
-        const Skull_Total = row[Index_Skull_Total].v? row[Index_Skull_Total].v : "N/A";
-        const Skull_Artist_Name = row[Index_Skull_Artist_Name].v? row[Index_Skull_Artist_Name].v : "N/A";
-        const Skull_Artist_Shortname = row[Index_Skull_Artist_Shortname].v? row[Index_Skull_Artist_Shortname].v : "N/A";
-        const Skull_Artist_Alive = row[Index_Skull_Artist_Alive].v? row[Index_Skull_Artist_Alive].v : "N/A";
-        const Skull_Artist_Biography = row[Index_Skull_Artist_Biography].v? row[Index_Skull_Artist_Biography].v : "N/A";
-        const Skull_Artist_Wikipedia = row[Index_Skull_Artist_Wikipedia].v? row[Index_Skull_Artist_Wikipedia].v : "N/A";
-        const Skull_Artist_Style = row[Index_Skull_Artist_Style].v? row[Index_Skull_Artist_Style].v : "N/A";
-        const Skull_Art_Movement = row[Index_Skull_Art_Movement].v? row[Index_Skull_Art_Movement].v : "N/A";
-        const Skull_Art_Movement_Period = row[Index_Skull_Art_Movement_Period].v? row[Index_Skull_Art_Movement_Period].v : "N/A";
-        const Skull_Prompt_Style = row[Index_Skull_Prompt_Style].v? row[Index_Skull_Prompt_Style].v : "N/A";
-        const Skull_Prompt = row[Index_Skull_Prompt].v? row[Index_Skull_Prompt].v : "N/A";
-        const Skull_Color_Style = row[Index_Skull_Color_Style].v? row[Index_Skull_Color_Style].v : "N/A";
-        const Skull_Generation_DateTime = row[Index_Skull_Generation_DateTime].f? row[Index_Skull_Generation_DateTime].f : "N/A"; // Verwende das formatierte Datum
-        const Skull_EngineUsed = row[Index_Skull_EngineUsed].v? row[Index_Skull_EngineUsed].v : "N/A";
-        const Skull_ID = row[Index_Skull_ID].v? row[Index_Skull_ID].v : "N/A";
-        const Skull_Image = row[Index_Skull_Image].v? row[Index_Skull_Image].v : "N/A";
-        const Skull_ID_Generic_Monochrome = row[Index_Skull_ID_Generic_Monochrome].v ? row[Index_Skull_ID_Generic_Monochrome].v : "N/A";
-        const Skull_ID_Generic_Color = row[Index_Skull_ID_Generic_Color].v ? row[Index_Skull_ID_Generic_Color].v : "N/A";
-        const Skull_ID_Ai_Generated_Monochrome = row[Index_Skull_ID_Ai_Generated_Monochrome].v ? row[Index_Skull_ID_Ai_Generated_Monochrome].v : "N/A";
-        const Skull_ID_Ai_Generated_Color = row[Index_Skull_ID_Ai_Generated_Color].v ? row[Index_Skull_ID_Ai_Generated_Color].v : "N/A";
+async function fetchOtherStyles(data) {
+  const currentId = data.official_id;
+  const artistId = data.artist_id;
+  const seriesId = data.series_id;
 
-        // Ausgabe in Carrd setzen
-        document.getElementById("skull-id").innerText = "SITM • " + Skull_ID;
-        document.querySelector("#skull-image img").src = Skull_Image;
-        document.getElementById("skull-prompt").innerText = Skull_Prompt;
-        document.getElementById("skull-number").innerText = Skull_Number + " / " + Skull_Total;
-        document.getElementById("skull-creation-date").innerText = Skull_Generation_DateTime;
-        document.getElementById("skull-color-style").innerText = Skull_Color_Style;
-        document.getElementById("skull-prompt-style").innerText = Skull_Prompt_Style;
-        document.getElementById("skull-engine").innerText = Skull_EngineUsed;
-        document.getElementById("skull-artist").innerText = Skull_Artist_Name; 
-        document.getElementById("skull-artist-alive").innerText = Skull_Artist_Alive;
-        document.getElementById("skull-art-movement").innerText = Skull_Art_Movement + " (" + Skull_Art_Movement_Period + ")";
-        document.getElementById("skull-artist-bio").innerText = Skull_Artist_Biography;
-        document.querySelector("#skull-artist-link a").href = Skull_Artist_Wikipedia;
-        document.querySelector("#skull-artist-link a").target = "_blank";
-        document.getElementById("styleselector").querySelector(".button.n01").href = `https://detail.skulls.inthemachine.io?id=${Skull_ID_Ai_Generated_Monochrome}`;
-        document.getElementById("styleselector").querySelector(".button.n02").href = `https://detail.skulls.inthemachine.io?id=${Skull_ID_Ai_Generated_Color}`;
-        document.getElementById("styleselector").querySelector(".button.n03").href = `https://detail.skulls.inthemachine.io?id=${Skull_ID_Generic_Monochrome}`;
-        document.getElementById("styleselector").querySelector(".button.n04").href = `https://detail.skulls.inthemachine.io?id=${Skull_ID_Generic_Color}`;
+  const { data: siblings, error } = await supabase
+    .from("item")
+    .select(
+      "official_id, prompt:prompt_id(description), color:color_id(description)"
+    )
+    .eq("artist_id", artistId)
+    .eq("series_id", seriesId);
 
-    } catch (error) {
-        console.error("❌ Fehler beim Laden der Daten:", error);
+  if (error) {
+    console.error("❌ Fehler beim Laden verwandter Bilder:", error);
+    return;
+  }
+
+  const variants = {
+    "AI-Generated|Monochrome": null,
+    "AI-Generated|Color": null,
+    "Generic|Monochrome": null,
+    "Generic|Color": null,
+  };
+
+  siblings.forEach((item) => {
+    const key = `${item.prompt.description}|${item.color.description}`;
+    if (variants[key] === null) {
+      variants[key] = item.official_id;
     }
+  });
+
+  // Mapping der Style-Kombinationen zu Button-Klassen
+  const styleMap = {
+    "AI-Generated|Monochrome": ".n01",
+    "AI-Generated|Color": ".n02",
+    "Generic|Monochrome": ".n03",
+    "Generic|Color": ".n04",
+  };
+
+  Object.entries(styleMap).forEach(([key, selector]) => {
+    const btn = document.querySelector(`#styleselector ${selector}`);
+    const targetId = variants[key];
+    if (targetId) {
+      btn.href = `https://detail.skulls.inthemachine.io?id=${targetId}`;
+      if (targetId === currentId) {
+        // Nur visuell deaktivieren
+        btn.style.opacity = "0.5";
+        btn.style.pointerEvents = "none";
+        btn.style.cursor = "default";
+      }
+    } else {
+      btn.href = "#";
+      btn.style.opacity = "0.2";
+      btn.style.pointerEvents = "none";
+      btn.style.cursor = "default";
+    }
+  });
 }
 
-// ID aus URL holen
+// 🔁 Hilfsfunktion: ID aus URL holen
 function getParam(name) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(name);
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(name);
 }
 
+// 🚀 Start
 const id = getParam("id");
 if (id) {
-    fetchData(id);
+  fetchData(id);
 } else {
-    console.log("⚠️ Keine ID gefunden.");
+  console.log("⚠️ Keine ID gefunden.");
 }
